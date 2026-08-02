@@ -3,6 +3,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
 const accessDescription = [
   'Backend API for the TAMID Group at NYU website.',
   '',
+  "_Where tomorrow's leaders connect with Israel's innovators._",
+  '',
   'Public endpoints are available for website and end-user integrations.',
   'Endpoints tagged Admin require bearer auth with admin privileges.',
 ].join('\n');
@@ -190,7 +192,7 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'TAMID API',
+      title: 'TAMID Group at NYU API',
       version: '1.0.0',
       description: accessDescription,
     },

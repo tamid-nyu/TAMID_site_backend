@@ -73,10 +73,15 @@ const createSwaggerHtml = (specUrl: string, title: string): string => `<!DOCTYPE
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${title}</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2318274B'/%3E%3Ctext x='16' y='22' font-family='Roboto,sans-serif' font-size='16' font-weight='800' text-anchor='middle' fill='%2341B5E8'%3ET%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css" />
   <style>
+    /* TAMID Group at NYU brand — see STYLE.md (Navy #18274B, Sky Blue #41B5E8) */
     body { margin: 0; padding: 0; }
     #swagger-ui { height: 100vh; }
+    .swagger-ui .topbar { background-color: #18274B; }
+    .swagger-ui .topbar .download-url-wrapper .download-url-button { background-color: #41B5E8; border-color: #41B5E8; }
+    .swagger-ui .info .title { color: #18274B; }
   </style>
 </head>
 <body>
@@ -100,7 +105,7 @@ const createSwaggerHtml = (specUrl: string, title: string): string => `<!DOCTYPE
 </html>`;
 
 app.get('/docs', (_req: Request, res: Response): void => {
-  res.send(createSwaggerHtml('/docs.json', 'TAMID API Documentation'));
+  res.send(createSwaggerHtml('/docs.json', 'TAMID Group at NYU API — Documentation'));
 });
 
 app.get('/docs.json', (_req: Request, res: Response): void => {
