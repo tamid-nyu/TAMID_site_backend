@@ -1,0 +1,11 @@
+process.env.NODE_ENV = 'test';
+process.env.LOG_LEVEL = 'silent';
+process.env.VERCEL = '1';
+process.env.SKIP_STARTUP_CONNECTION_TESTS = 'true';
+process.env.DISABLE_EMAIL_SENDING = 'true';
+process.env.DISABLE_MAILCHIMP_SYNC = 'true';
+process.env.FRONTEND_URL = 'https://nyu-tamid.org';
+process.env.ADMIN_URL = 'https://admin.nyu-tamid.org';
+process.env.SUPABASE_URL = 'http://127.0.0.1:54321';
+process.env.SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key';
+process.env.SUPABASE_SECRET_KEY = 'test-secret-key';

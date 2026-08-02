@@ -1,0 +1,5 @@
+# Code Owners for TAMID_site_backend
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global rule — @tamid-admin owns all files in the repository
+* @tamid-admin

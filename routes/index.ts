@@ -1,0 +1,10 @@
+export { default as boardMembersRoutes } from './boardMembers.js';
+export { default as eventsRoutes } from './events.js';
+export { default as newsletterRoutes } from './newsletter.js';
+export { default as newsletterSignupsRoutes } from './newsletterSignups.js';
+export { default as contactRoutes } from './contact.js';
+export { default as contactRequestsRoutes } from './contactRequests.js';
+export { default as membersRoutes } from './members.js';
+export { default as semestersRoutes } from './semesters.js';
+export { default as siteConfigRoutes } from './siteConfig.js';
+export { default as storageRoutes } from './storage.js';
