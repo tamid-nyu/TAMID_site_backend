@@ -76,7 +76,7 @@ describe('server shared behavior', () => {
       });
   });
 
-  it('reports missing Supabase URL as unsafe on /health', async () => {
+  it('falls back to the production Supabase project when no URL is configured', async () => {
     const app = await importFreshApp({ supabaseUrl: null });
 
     await request(app)
@@ -84,9 +84,9 @@ describe('server shared behavior', () => {
       .expect(200)
       .expect(({ body }) => {
         expect((body as HealthResponseBody).supabase).toEqual({
-          url: null,
-          projectRef: 'unknown',
-          environment: 'unknown',
+          url: 'https://ggpcovdlthmysfouulpq.supabase.co',
+          projectRef: 'ggpcovdlthmysfouulpq',
+          environment: 'production',
           isProduction: true,
         });
       });

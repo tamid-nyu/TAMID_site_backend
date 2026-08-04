@@ -29,11 +29,20 @@ import { logger, httpLogger } from './logger.js';
 import swaggerSpec from './config/swagger.js';
 
 dotenv.config();
-// Committed PUBLIC production defaults (project URL + publishable/anon key,
-// browser caller origins). dotenv never overrides values already set, so real
-// host env / local .env always win. The SECRET/service_role key is NOT in this
-// file - admin writes still require it from the environment.
-dotenv.config({ path: '.env.defaults' });
+// PUBLIC production defaults, compiled into the bundle so the deployed
+// serverless function has config even when the host sets no env (a plain
+// .env file is NOT bundled by Vercel). These are client-public values
+// (project URL + publishable/anon key + browser caller origins); RLS
+// protects the data. `||=` means any real host env / local .env still wins.
+// The SECRET/service_role key is intentionally NOT defaulted - admin writes
+// require it from the environment.
+process.env.SUPABASE_URL ||= 'https://ggpcovdlthmysfouulpq.supabase.co';
+process.env.SUPABASE_PUBLISHABLE_KEY ||= 'sb_publishable_xxEeeefJc2vejMZirUA0RA_9VKUs4RX';
+process.env.FRONTEND_URL ||= 'https://tamid-site.vercel.app';
+process.env.ADMIN_URL ||= 'https://tamid-site-internal.vercel.app';
+process.env.DISABLE_EMAIL_SENDING ||= 'true';
+process.env.DISABLE_MAILCHIMP_SYNC ||= 'true';
+process.env.SKIP_STARTUP_CONNECTION_TESTS ||= 'true';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -152,7 +161,7 @@ interface CorsCallback {
 
 const allowedOrigins = [process.env.FRONTEND_URL, process.env.ADMIN_URL].filter(
   Boolean
-) as string[];
+);
 
 const corsOptions: cors.CorsOptions = {
   origin: function (origin: string | undefined, callback: CorsCallback): void {
