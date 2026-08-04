@@ -60,7 +60,7 @@ describe('server shared behavior', () => {
 
   it('reports production Supabase metadata as unsafe on /health', async () => {
     const app = await importFreshApp({
-      supabaseUrl: 'https://your-production-project-ref.supabase.co',
+      supabaseUrl: 'https://ggpcovdlthmysfouulpq.supabase.co',
     });
 
     await request(app)
@@ -68,8 +68,8 @@ describe('server shared behavior', () => {
       .expect(200)
       .expect(({ body }) => {
         expect((body as HealthResponseBody).supabase).toEqual({
-          url: 'https://your-production-project-ref.supabase.co',
-          projectRef: 'your-production-project-ref',
+          url: 'https://ggpcovdlthmysfouulpq.supabase.co',
+          projectRef: 'ggpcovdlthmysfouulpq',
           environment: 'production',
           isProduction: true,
         });
