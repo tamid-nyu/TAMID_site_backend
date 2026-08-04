@@ -1,4 +1,4 @@
-const PRODUCTION_SUPABASE_PROJECT_REF = 'your-production-project-ref';
+const PRODUCTION_SUPABASE_PROJECT_REF = 'ggpcovdlthmysfouulpq';
 const PRODUCTION_SUPABASE_URL = `https://${PRODUCTION_SUPABASE_PROJECT_REF}.supabase.co`;
 
 type SupabaseTargetEnvironment = 'local' | 'production' | 'unknown';

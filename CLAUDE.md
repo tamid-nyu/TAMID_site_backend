@@ -44,7 +44,7 @@
 
 - `.env` is **never committed** (gitignored). `.env.example` must contain **PLACEHOLDERS only**.
 - The SJBA template had leaked a real Supabase URL + publishable key; these were scrubbed. **Never re-introduce real creds.**
-- A **new, empty** Supabase project + fresh keys is a human TODO — do **not** import SJBA data.
+- The live Supabase project is **`ggpcovdlthmysfouulpq`** ("TAMID Website"). Baseline migration applied; storage buckets `board-headshots` + `event-flyers` created (public). The publishable key + URL are public; the **secret/service_role key stays in `.env` / Vercel only** — never commit it. Do **not** import SJBA data.
 
 ## Gotchas
 
@@ -54,5 +54,5 @@
 ## Human TODOs
 
 - Real domain / email / socials.
-- New Supabase project: set `SUPABASE_URL` / publishable / secret keys in Vercel env, run migrations, create storage buckets (`board-headshots`, `event-flyers`).
+- Supabase project `ggpcovdlthmysfouulpq` provisioned (schema + buckets done). Still TODO: set `SUPABASE_URL` / publishable / secret keys in **Vercel** env, and the migration-workflow GitHub Actions secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF=ggpcovdlthmysfouulpq`, `SUPABASE_DB_PASSWORD`).
 - Real Mailchimp (`MAILCHIMP_*`) and Resend (`RESEND_API_KEY`) keys.
