@@ -5,10 +5,10 @@ class BoardMember {
   id: string;
   fullName: string;
   position: string;
-  bio: string;
-  major: string;
-  year: string;
-  hometown: string;
+  bio: string | null;
+  major: string | null;
+  year: string | null;
+  hometown: string | null;
   linkedinUrl: string | null;
   email: string;
   headshotFile: string | null;
@@ -40,7 +40,7 @@ class BoardMember {
       id: apiMember.id,
       position: apiMember.position,
       fullName: apiMember.full_name,
-      bio: apiMember.bio.replace(/\\n/g, '\n'), // convert escaped newlines to actual newlines
+      bio: apiMember.bio ? apiMember.bio.replace(/\\n/g, '\n') : apiMember.bio, // convert escaped newlines to actual newlines (bio is nullable)
       major: apiMember.major,
       year: apiMember.year,
       hometown: apiMember.hometown,
