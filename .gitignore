@@ -34,3 +34,6 @@ dist-ssr
 
 # Local production Supabase snapshots
 supabase/.cloud-snapshot/
+
+# Committed PUBLIC production defaults (client-side values only, NO secret key)
+!.env.defaults

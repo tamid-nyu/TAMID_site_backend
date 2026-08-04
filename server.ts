@@ -29,6 +29,11 @@ import { logger, httpLogger } from './logger.js';
 import swaggerSpec from './config/swagger.js';
 
 dotenv.config();
+// Committed PUBLIC production defaults (project URL + publishable/anon key,
+// browser caller origins). dotenv never overrides values already set, so real
+// host env / local .env always win. The SECRET/service_role key is NOT in this
+// file - admin writes still require it from the environment.
+dotenv.config({ path: '.env.defaults' });
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
