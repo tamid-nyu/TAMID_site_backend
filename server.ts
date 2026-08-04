@@ -159,9 +159,7 @@ interface CorsCallback {
   (err: Error | null, allow?: boolean): void;
 }
 
-const allowedOrigins = [process.env.FRONTEND_URL, process.env.ADMIN_URL].filter(
-  Boolean
-);
+const allowedOrigins = [process.env.FRONTEND_URL, process.env.ADMIN_URL].filter(Boolean);
 
 const corsOptions: cors.CorsOptions = {
   origin: function (origin: string | undefined, callback: CorsCallback): void {
