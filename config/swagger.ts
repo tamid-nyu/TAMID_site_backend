@@ -1469,6 +1469,79 @@ const options: swaggerJsdoc.Options = {
         },
         post: adminCreateOperation('Members', 'Admin: create member'),
       },
+      '/v1/members/bulk': {
+        post: {
+          tags: ['Members', 'Admin'],
+          summary: 'Admin: bulk-create members from a roster',
+          description:
+            'Requires bearer auth with admin privileges. Accepts an array of members, ' +
+            'auto-creates any referenced semesters that do not yet exist, skips duplicates ' +
+            '(same first+last+email+semester) and invalid rows, and reports a summary.',
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['members'],
+                  properties: {
+                    members: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        required: ['first_name', 'last_name', 'semester'],
+                        properties: {
+                          first_name: { type: 'string', example: 'Jane' },
+                          last_name: { type: 'string', example: 'Doe' },
+                          email: { type: 'string', example: 'jane@nyu.edu' },
+                          semester: { type: 'string', example: 'F26' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Bulk import summary',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      success: { type: 'boolean', example: true },
+                      data: {
+                        type: 'object',
+                        properties: {
+                          created: { type: 'integer', example: 2 },
+                          skipped: { type: 'integer', example: 1 },
+                          errors: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                row: { type: 'integer', example: 3 },
+                                message: { type: 'string', example: 'Last name is required' },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            '400': { description: 'Invalid or empty members array' },
+            '401': { description: 'Missing or invalid bearer token' },
+            '403': { description: 'Authenticated user is not an admin' },
+            '429': { description: 'Too Many Requests' },
+          },
+        },
+      },
       '/v1/members/{id}': {
         put: adminUpdateOperation('Members', 'Admin: update member', 'Member UUID'),
         delete: adminDeleteOperation('Members', 'Admin: delete member', 'Member UUID'),

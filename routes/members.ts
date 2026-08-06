@@ -1,5 +1,5 @@
 import express, { type Request, type Response } from 'express';
-import { Member } from '../models/index.js';
+import { Member, type BulkMemberInput } from '../models/index.js';
 import { asyncHandler, requireAdminUser, validateInput } from '../middleware/index.js';
 import {
   adminIdValidation,
@@ -38,6 +38,48 @@ router.get(
   @access  Admin
 */
 router.post('/', requireAdminUser, createAdminCreateHandler('members'));
+
+/*
+  @desc    Bulk-create members from a parsed roster
+  @route   POST /v1/members/bulk
+  @access  Admin
+*/
+router.post(
+  '/bulk',
+  requireAdminUser,
+  asyncHandler(async (req: Request, res: Response) => {
+    const body = req.body as { members?: unknown };
+
+    if (!Array.isArray(body.members)) {
+      res.status(400).json({
+        success: false,
+        error: {
+          message: 'Request body must include a "members" array',
+          code: 'VALIDATION_ERROR',
+        },
+      });
+      return;
+    }
+
+    if (body.members.length === 0) {
+      res.status(400).json({
+        success: false,
+        error: {
+          message: 'The "members" array must not be empty',
+          code: 'VALIDATION_ERROR',
+        },
+      });
+      return;
+    }
+
+    const summary = await Member.bulkCreate(body.members as BulkMemberInput[]);
+
+    res.status(200).json({
+      success: true,
+      data: summary,
+    });
+  })
+);
 
 /*
   @desc    Update member
