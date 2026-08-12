@@ -38,7 +38,8 @@ dotenv.config();
 // require it from the environment.
 process.env.SUPABASE_URL ||= 'https://ggpcovdlthmysfouulpq.supabase.co';
 process.env.SUPABASE_PUBLISHABLE_KEY ||= 'sb_publishable_xxEeeefJc2vejMZirUA0RA_9VKUs4RX';
-process.env.FRONTEND_URL ||= 'https://tamid-site.vercel.app';
+process.env.FRONTEND_URL ||=
+  'https://tamid-site.vercel.app,https://nyutamid.org,https://www.nyutamid.org';
 process.env.ADMIN_URL ||= 'https://tamid-site-internal.vercel.app';
 process.env.DISABLE_EMAIL_SENDING ||= 'true';
 process.env.DISABLE_MAILCHIMP_SYNC ||= 'true';
@@ -159,7 +160,11 @@ interface CorsCallback {
   (err: Error | null, allow?: boolean): void;
 }
 
-const allowedOrigins = [process.env.FRONTEND_URL, process.env.ADMIN_URL].filter(Boolean);
+const allowedOrigins = [process.env.FRONTEND_URL, process.env.ADMIN_URL]
+  .filter((value): value is string => Boolean(value))
+  .flatMap((value) => value.split(','))
+  .map((value) => value.trim())
+  .filter(Boolean);
 
 const corsOptions: cors.CorsOptions = {
   origin: function (origin: string | undefined, callback: CorsCallback): void {
