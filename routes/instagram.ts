@@ -10,6 +10,7 @@ import {
 import { checkCaption } from '../config/instagramCaption.js';
 import { accountInsights, postInsights, audienceInsights } from '../config/instagramInsights.js';
 import { asyncHandler, requireAdminUser, validateInput } from '../middleware/index.js';
+import { refreshInstagramToken, tokenStatus } from '../config/instagramToken.js';
 import { logger } from '../logger.js';
 
 /**
@@ -266,6 +267,32 @@ router.get(
     if (!guardConfigured(res)) return;
     const breakdown = (req.query.breakdown as string | undefined) ?? 'city';
     res.json({ success: true, data: await audienceInsights(breakdown) });
+  })
+);
+
+/** Token health, so the panel can warn before publishing silently breaks. */
+router.get(
+  '/token',
+  asyncHandler(async (_req: Request, res: Response) => {
+    res.json({ success: true, data: await tokenStatus() });
+  })
+);
+
+/**
+ * Renews the access token.
+ *
+ * Instagram long-lived tokens last 60 days, so without this publishing stops
+ * two months after setup with nothing to say why. Safe to call repeatedly: it
+ * no-ops until the token is past halfway unless `force` is set.
+ */
+router.post(
+  '/token/refresh',
+  body('force').optional().isBoolean(),
+  asyncHandler(async (req: Request, res: Response) => {
+    if (!handleValidation(req, res)) return;
+    if (!guardConfigured(res)) return;
+    const { force } = req.body as { force?: unknown };
+    res.json({ success: true, data: await refreshInstagramToken(force === true) });
   })
 );
 

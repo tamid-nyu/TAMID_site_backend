@@ -1,4 +1,5 @@
 import { logger } from '../logger.js';
+import { getInstagramToken } from './instagramToken.js';
 
 /**
  * Client for Meta's Instagram Content Publishing API.
@@ -25,28 +26,34 @@ export class InstagramError extends Error {
 export const isInstagramConfigured = (): boolean =>
   Boolean(process.env.IG_ACCESS_TOKEN && process.env.IG_USER_ID);
 
-const requireConfig = (): { token: string; userId: string } => {
-  const token = process.env.IG_ACCESS_TOKEN;
+const requireUserId = (): string => {
   const userId = process.env.IG_USER_ID;
-
-  if (!token || !userId) {
-    const missing: string[] = [];
-    if (!token) missing.push('IG_ACCESS_TOKEN');
-    if (!userId) missing.push('IG_USER_ID');
-    throw new InstagramError(`Instagram is not configured. Missing: ${missing.join(', ')}.`, 503);
-  }
-
-  return { token, userId };
+  if (!userId) throw new InstagramError('Instagram is not configured. Missing: IG_USER_ID.', 503);
+  return userId;
 };
 
-export const instagramAccountId = (): string => requireConfig().userId;
+/**
+ * The current access token.
+ *
+ * Read through instagramToken so a scheduled refresh can rotate it without a
+ * redeploy; the environment variable is only the seed for a fresh environment.
+ */
+const requireToken = async (): Promise<string> => {
+  const token = await getInstagramToken();
+  if (!token) {
+    throw new InstagramError('Instagram is not configured. Missing: IG_ACCESS_TOKEN.', 503);
+  }
+  return token;
+};
+
+export const instagramAccountId = (): string => requireUserId();
 
 const request = async <T>(
   method: 'GET' | 'POST',
   path: string,
   params: Record<string, string | number | boolean | undefined> = {}
 ): Promise<T> => {
-  const { token } = requireConfig();
+  const token = await requireToken();
   const url = new URL(GRAPH_BASE + (path.startsWith('/') ? path : `/${path}`));
 
   const init: RequestInit = { method };
