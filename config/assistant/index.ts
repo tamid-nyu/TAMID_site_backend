@@ -61,8 +61,8 @@ const buildModel = () => {
   return new ChatOpenAI({
     apiKey: deepseek ?? xai,
     model: deepseek
-      ? (process.env.DEEPSEEK_MODEL ?? 'deepseek-chat')
-      : (process.env.XAI_MODEL ?? 'grok-4-latest'),
+      ? (process.env.DEEPSEEK_MODEL ?? 'deepseek-v4-flash')
+      : (process.env.XAI_MODEL ?? 'grok-4.6'),
     temperature: 0.2,
     configuration: {
       baseURL: deepseek

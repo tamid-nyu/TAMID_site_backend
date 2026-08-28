@@ -17,7 +17,12 @@ import { logger } from '../../logger.js';
 const IMAGE_BUCKET = process.env.INSTAGRAM_BUCKET ?? 'event-flyers';
 
 interface XaiImageResponse {
-  data?: Array<{ url?: string; b64_json?: string; revised_prompt?: string }>;
+  data?: Array<{
+    url?: string;
+    b64_json?: string;
+    revised_prompt?: string;
+    mime_type?: string;
+  }>;
   error?: { message?: string };
 }
 
@@ -39,7 +44,7 @@ export const generateImage = tool(
     }
 
     const base = process.env.XAI_API_URL ?? 'https://api.x.ai/v1';
-    const model = process.env.XAI_IMAGE_MODEL ?? 'grok-2-image';
+    const model = process.env.XAI_IMAGE_MODEL ?? 'grok-imagine-image-2.0';
 
     const response = await fetch(`${base}/images/generations`, {
       method: 'POST',
@@ -62,6 +67,16 @@ export const generateImage = tool(
     if (!b64) return JSON.stringify({ ok: false, error: 'No image was returned.' });
 
     // Instagram only accepts JPEG for feed images, and only from a public URL.
+    // Grok returns image/jpeg, but the response says so explicitly, so refuse
+    // anything else rather than storing a file Instagram will later reject.
+    const mime = payload.data?.[0]?.mime_type ?? 'image/jpeg';
+    if (mime !== 'image/jpeg') {
+      return JSON.stringify({
+        ok: false,
+        error: `Image generation returned ${mime}; Instagram feed posts require JPEG.`,
+      });
+    }
+
     const path = `instagram/generated/${Date.now()}.jpg`;
     const { error } = await getSupabase()
       .storage.from(IMAGE_BUCKET)
