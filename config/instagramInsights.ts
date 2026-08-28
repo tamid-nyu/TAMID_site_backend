@@ -112,8 +112,15 @@ export const postInsights = async (limit: number) => {
       media_type?: string;
       permalink?: string;
       timestamp?: string;
+      media_url?: string;
+      thumbnail_url?: string;
     }>;
-  }>(`/${id}/media`, { fields: 'id,caption,media_type,permalink,timestamp', limit });
+  }>(`/${id}/media`, {
+    // thumbnail_url is the still for videos and reels; media_url is the asset
+    // itself, which for a VIDEO is the video file rather than an image.
+    fields: 'id,caption,media_type,permalink,timestamp,media_url,thumbnail_url',
+    limit,
+  });
 
   const posts = await Promise.all(
     (media.data ?? []).map(async (post) => {
@@ -123,6 +130,8 @@ export const postInsights = async (limit: number) => {
         type: post.media_type,
         permalink: post.permalink,
         caption: post.caption ?? '',
+        // Prefer the video still; fall back to the image itself.
+        thumbnail: post.thumbnail_url ?? post.media_url,
       };
       try {
         const insights = await instagram.get<{ data?: InsightMetric[] }>(`/${post.id}/insights`, {
