@@ -23,6 +23,7 @@ import {
   semestersRoutes,
   siteConfigRoutes,
   storageRoutes,
+  instagramRoutes,
 } from './routes/index.js';
 
 import { logger, httpLogger } from './logger.js';
@@ -288,6 +289,7 @@ app.use('/v1/members', membersRoutes);
 app.use('/v1/semesters', semestersRoutes);
 app.use('/v1/site-config', siteConfigRoutes);
 app.use('/v1/storage', storageRoutes);
+app.use('/v1/instagram', instagramRoutes);
 
 // API version info endpoint
 app.get('/v1', (_req: Request, res: Response): void => {

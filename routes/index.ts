@@ -8,3 +8,4 @@ export { default as membersRoutes } from './members.js';
 export { default as semestersRoutes } from './semesters.js';
 export { default as siteConfigRoutes } from './siteConfig.js';
 export { default as storageRoutes } from './storage.js';
+export { default as instagramRoutes } from './instagram.js';
